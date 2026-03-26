@@ -1,0 +1,24 @@
+# Ziskani vsech citatu
+GET localhost:8080/quotes
+###
+
+POST localhost:8080/quotes
+Content-Type: application/json
+
+{
+    "text": "Kdo jinemu jamu kopa, sam do ni pada.",
+    "author": "Neznamy dedecek"
+}
+###
+
+# Ziskani citatu podle ID
+GET localhost:8080/quotes/2
+###
+
+# Ziskani nahodneho citatu z externiho API
+GET localhost:8080/quotes/random
+###
+
+# Ulozeni nahodneho citatu z externiho API
+POST localhost:8080/quotes/random
+###
