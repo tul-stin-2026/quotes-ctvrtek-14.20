@@ -2,6 +2,7 @@ package cz.tul.stin.paveltyl.quotes2.service;
 
 import cz.tul.stin.paveltyl.quotes2.model.ExternalQuote;
 import cz.tul.stin.paveltyl.quotes2.model.Quote;
+import cz.tul.stin.paveltyl.quotes2.repository.QuoteRepository;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,13 +16,14 @@ import java.util.NoSuchElementException;
 public class QuoteService {
     private static final String RANDOM_QUOTE_URL = "https://zenquotes.io/api/random";
 
-    private final RestOperations restOperations;
-
     @Getter
     private final List<Quote> quotes = new ArrayList<>();
+    private final RestOperations restOperations;
+    private final QuoteRepository quoteRepository;
 
-    public QuoteService(RestOperations restOperations) {
+    public QuoteService(RestOperations restOperations, QuoteRepository quoteRepository) {
         this.restOperations = restOperations;
+        this.quoteRepository = quoteRepository;
         quotes.add(new Quote(1L, "Komu se neleni, tomu se zeleni.", "neznamy autor"));
     }
 
@@ -52,6 +54,7 @@ public class QuoteService {
     }
 
     public Quote saveRandomQuote() {
-        return saveQuote(getRandomQuote());
+        Quote quote = getRandomQuote();
+        return quoteRepository.save(quote);
     }
 }
