@@ -12,8 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -55,8 +54,35 @@ public class QuoteServiceTest {
     }
 
     @Test
-    void getRandomQuote_returnsEmptyQuote() {
+    void getRandomQuote_throwsExceptionWhenApiReturnsEmptyArray() {
+        when(restOperations.getForObject(
+                eq(RANDOM_QUOTE_URL),
+                eq(ExternalQuote[].class)
+        )).thenReturn(new ExternalQuote[0]);
 
+    RuntimeException exception = assertThrows(
+            RuntimeException.class,
+            () -> quoteService.getRandomQuote()
+    );
+
+    assertEquals("Empty response!",
+            exception.getMessage());
+    }
+
+    @Test
+    void getRandomQuote_ThrowsExceptionWhenApiReturnsNull() {
+        when(restOperations.getForObject(
+                eq(RANDOM_QUOTE_URL),
+                eq(ExternalQuote[].class)
+        )).thenReturn(null);
+
+        RuntimeException exception = assertThrows(
+            RuntimeException.class,
+            () -> quoteService.getRandomQuote()
+        );
+
+        assertEquals("Empty response!",
+                exception.getMessage());
     }
 
     @Test
