@@ -6,6 +6,7 @@ import cz.tul.stin.paveltyl.quotes2.repository.QuoteRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import org.mockito.ArgumentCaptor;
 import org.springframework.web.client.RestOperations;
 
 import org.mockito.InjectMocks;
@@ -109,6 +110,15 @@ public class QuoteServiceTest {
                 eq(RANDOM_QUOTE_URL),
                 eq(ExternalQuote[].class)
         );
+
+        // zachytavac typu Quote
+        ArgumentCaptor<Quote> quoteCaptor = ArgumentCaptor.forClass(Quote.class);
+        verify(quoteRepository).save(quoteCaptor.capture());
+        // skutecny objekt, ktery service chtela ulozit
+        Quote captureQuote = quoteCaptor.getValue();
+        assertEquals("Ulozeny testovaci citat.", captureQuote.getText());
+        assertEquals("Ulozeny testovaci autor", captureQuote.getAuthor());
+        assertNull(captureQuote.getId());
 
         assertEquals("Ulozeny testovaci citat.", result.getText());
         assertEquals("Ulozeny testovaci autor", result.getAuthor());
